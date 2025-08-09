@@ -1,16 +1,17 @@
 import tkinter as tk
 import random
+import time
 
 root = tk.Tk()
 root.title("Sorting Visualizer")
-root.geometry("800x550")
+root.geometry("800x625")
 
 canvas = tk.Canvas(root, width=900, height=400, bg='white')
 canvas.pack(pady=10)
 
 def draw_data(data, color_array):
     canvas.delete("all")
-    c_height = 450
+    c_height = 400
     c_width = 800
     bar_width = c_width / len(data)
     spacing = 0
@@ -23,22 +24,29 @@ def draw_data(data, color_array):
         y1 = c_height
         canvas.create_rectangle(x0, y0, x1, y1, fill=color_array[i])
 
+swaps = 0
 speed = tk.DoubleVar()
 bar_count = tk.IntVar()
 speed.set(100)
 bar_count.set(145)
 
-slider_frame = tk.Frame(root)
-slider_frame.pack(pady=10, fill='x')
+swap_label = tk.Label(root, text="Swaps done: 0 swaps", font=("Arial", 12))
+swap_label.pack(pady=5, anchor="center")
 
-speed_Label = tk.Label(root, text="Sorting Speed (ms delay)")
+time_label = tk.Label(root, text="Time taken: 0.000 seconds", font=("Arial", 12))
+time_label.pack(pady=5, anchor="center")
+
+slider_frame = tk.Frame(root)
+slider_frame.pack(fill='x')
+
+speed_Label = tk.Label(slider_frame, text="Sorting Speed (ms delay)")
 speed_Label.pack(side="left", padx=10)
-speed_slider = tk.Scale(root, from_=1, to=200, orient=tk.HORIZONTAL, variable=speed)
+speed_slider = tk.Scale(slider_frame, from_=1, to=200, orient=tk.HORIZONTAL, variable=speed)
 speed_slider.pack(side="left", padx=10)
 
-bar_Label = tk.Label(root, text="Number of Bars")
+bar_Label = tk.Label(slider_frame, text="Number of Bars")
 bar_Label.pack(side="right", padx=10)
-bar_slider = tk.Scale(root, from_=10, to=300, orient=tk.HORIZONTAL, variable=bar_count)
+bar_slider = tk.Scale(slider_frame, from_=10, to=300, orient=tk.HORIZONTAL, variable=bar_count)
 bar_slider.pack(side="right", padx=10)
 
 def generate():
@@ -47,22 +55,38 @@ def generate():
     draw_data(data, ["skyblue" for _ in range(len(data))])
 
 btn = tk.Button(root, text="Generate Data", command=generate)
-btn.pack(pady=10)
+btn.pack(pady=5, anchor="center")
 
-sort_btn = tk.Button(root, text="Start Bubble Sort", command=lambda: bubble_sort(data))
-sort_btn.pack(pady=5)
+start_time = None  # For tracking sort time
 
-def bubble_sort(data):
+def bubble_sort_step(i=0, j=0):
+    global data, start_time, swaps
     n = len(data)
-    for i in range(n):
-        for j in range(n - i - 1):
+
+    # Start of sort
+    if i == 0 and j == 0:
+        start_time = time.time()
+        swaps = 0  # Reset swaps counter
+
+    if i < n:
+        if j < n - i - 1:
             if data[j] > data[j + 1]:
-                #swap values
                 data[j], data[j + 1] = data[j + 1], data[j]
-                #draw after each swap
-                draw_data(data, ["red" if x == j or x == j + 1 else "skyblue" for x in range(len(data))])
-                root.update_idletasks()
-                root.after(int(speed.get()))
+                swaps += 1  # Count each swap
+                swap_label.config(text=f"Swaps done: {swaps} swaps")  # Live update
+
+            draw_data(data, ["red" if x == j or x == j + 1 else "skyblue" for x in range(len(data))])
+            root.after(int(speed.get()), lambda: bubble_sort_step(i, j + 1))
+        else:
+            root.after(int(speed.get()), lambda: bubble_sort_step(i + 1, 0))
+    else:
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        time_label.config(text=f"Time taken: {elapsed_time:.3f} seconds")
+        draw_data(data, ["green" for _ in range(len(data))])
+
+sort_btn = tk.Button(root, text="Start Bubble Sort", command=lambda: bubble_sort_step())
+sort_btn.pack(pady=5, anchor="center")
 
 data = []
 root.mainloop()
