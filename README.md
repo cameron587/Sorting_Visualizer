@@ -1,24 +1,41 @@
-# Sorting Visualizer (Bubble Sort)
+# Sorting Visualizer
 
-This is a Python GUI project that visually demonstrates how the **Bubble Sort** algorithm works. Built using `tkinter`, it allows users to adjust the **speed** of sorting and the **number of bars** being sorted in real time.
+A simple Python Tkinter application that visualizes the **Bubble Sort** algorithm in real time.  
+This project is beginner-friendly and a good introduction to sorting algorithms and GUI programming.
 
-## 🧠 Features
+## Author  
+Cameron McLaren  
+GitHub: [cameron587](https://github.com/cameron587)
 
-- Visual display of the Bubble Sort algorithm
-- Adjustable sorting speed using a slider
-- Adjustable number of bars (elements) being sorted
-- Dynamic color changes during sorting steps
+## Features
+- Visual representation of Bubble Sort  
+- Adjustable sorting speed  
+- Start and reset controls  
+- Clean UI with labels and buttons  
 
-## 🖥️ Technologies Used
+## Requirements
+- Python 3.x  
+- Tkinter (comes with Python by default)
 
-- Python 3
-- Tkinter (for GUI)
-- Random module (to generate random data)
-
-## 🚀 How to Run
-
-1. Make sure you have Python 3 installed.
-2. Save the script (e.g. `sorting_visualizer.py`).
-3. Run the script:
+## How to Run
+1. Clone the repository:
    ```bash
-   python sorting_visualizer.py
+   git clone https://github.com/cameron587/Sorting_Visualizer.git
+Navigate to the project folder:
+
+bash
+Copy
+Edit
+cd Sorting_Visualizer
+Run the script:
+
+bash
+Copy
+Edit
+python sorting_visualizer.py
+How It Works
+Bars represent array elements.
+
+Bubble Sort swaps bars until the list is sorted.
+
+The canvas updates each step to show the progress.
